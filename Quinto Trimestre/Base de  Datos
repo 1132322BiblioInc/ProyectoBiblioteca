@@ -1,0 +1,212 @@
+
+-- phpMyAdmin SQL Dump
+-- version 4.1.14
+-- http://www.phpmyadmin.net
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 27-06-2017 a las 16:48:56
+-- Versión del servidor: 5.6.17
+-- Versión de PHP: 5.5.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Base de datos: `biblioteca`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `devolucion`
+--
+
+CREATE TABLE IF NOT EXISTS `devolucion` (
+  `id_devolucion` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo_del_prestamo` int(15) NOT NULL,
+  `codigo_del_libro` int(15) NOT NULL,
+  `titulo_del_libro` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `documento_usuario` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+  `nombre_usuario` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `fecha_prestamo` date NOT NULL,
+  `fecha_sugerida` date NOT NULL,
+  `fecha_entrega_libro` date NOT NULL,
+  `observaciones` varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`id_devolucion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `devolucion`
+--
+
+INSERT INTO `devolucion` (`id_devolucion`, `codigo_del_prestamo`, `codigo_del_libro`, `titulo_del_libro`, `documento_usuario`, `nombre_usuario`, `fecha_prestamo`, `fecha_sugerida`, `fecha_entrega_libro`, `observaciones`) VALUES
+(1, 33, 3, 'CIEN_AÑOS_DE_SOLEDA', '789', 'AUSTIN', '2017-06-21', '2017-06-22', '2017-06-27', 'imcunplio con los terminos de devolucion'),
+(2, 33, 3, 'CIEN_AÑOS_DE_SOLEDA', '789', 'AUSTIN', '2017-06-21', '2017-06-22', '2017-06-28', 'incumplido'),
+(3, 37, 1, 'CASCOS_DE_GUERRA', '789', 'AUSTIN', '2017-06-27', '2017-06-28', '2017-06-28', 'le arranco una hoja al libro'),
+(4, 37, 1, 'CASCOS_DE_GUERRA', '789', 'AUSTIN', '2017-06-27', '2017-06-28', '2017-06-30', 'no cumplio con el acuerdo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estadoprestamo`
+--
+
+CREATE TABLE IF NOT EXISTS `estadoprestamo` (
+  `idEstadoPrestamo` int(100) NOT NULL,
+  `estadoPrestamo` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`idEstadoPrestamo`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `estadoprestamo`
+--
+
+INSERT INTO `estadoprestamo` (`idEstadoPrestamo`, `estadoPrestamo`) VALUES
+(1, 'Disponible'),
+(2, 'No disponible');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `libro`
+--
+
+CREATE TABLE IF NOT EXISTS `libro` (
+  `idLibro` int(250) NOT NULL,
+  `titulo` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
+  `autor` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
+  `editorial` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
+  `cantidad` int(250) NOT NULL,
+  `genero` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
+  `fechaPublicacion` date NOT NULL,
+  `descripcionFisica` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
+  `fechaRegistro` date NOT NULL,
+  `fk_id_EstadoPrestamo` int(100) NOT NULL,
+  `imagen` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`idLibro`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `libro`
+--
+
+INSERT INTO `libro` (`idLibro`, `titulo`, `autor`, `editorial`, `cantidad`, `genero`, `fechaPublicacion`, `descripcionFisica`, `fechaRegistro`, `fk_id_EstadoPrestamo`, `imagen`) VALUES
+(789456, 'EL QUIJOTE', 'DANIEL', 'EL BURRO', 2, 'NARRATIVO', '2017-05-02', 'ABURRIDO', '2017-05-04', 2, '151519131314libro1.jpg'),
+(1, 'CASCOS_DE_GUERRA', 'MARIA_TEREZA', 'GRANCOLOMBIANO', 1, 'LIRICO', '1990-06-13', 'INTERESANTE', '2015-10-30', 1, '161616141442img_actualizar.png'),
+(2, 'COLA', 'PROSENETA', 'LA VERGA', 2, 'CULISTA', '2017-06-01', 'BUENISIMO', '2017-06-06', 1, '121222141441img_eliminar.jpg'),
+(3, 'CIEN_AÑOS_DE_SOLEDA', 'GABRIEL_GARCIA_MARQUEZ', 'PANAMERICANA', 1, 'LIRICO', '1988-02-10', 'ES_POBRE', '2017-06-15', 1, '121259141441141425img_slider5.jpg'),
+(12, 'CIUDADES_DE_PAPEL', 'DUVAN', 'SENA', 5, 'SUSPENSO', '2017-06-14', 'NUEVO', '2017-06-15', 1, '2323456539_222354571236523_1740044179_n.jpg'),
+(14, 'CIUDADES_', 'DUVAN', 'SENA', 5, 'DRAMA', '2017-06-06', 'NUEVO', '2017-06-07', 2, '232331921072_978063502287799_2097069263314083264_o.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `prestamo`
+--
+
+CREATE TABLE IF NOT EXISTS `prestamo` (
+  `id_prestamo` int(45) NOT NULL AUTO_INCREMENT,
+  `codigo_libro` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  `titulo_libro` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  `documento_usuario` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  `nombre_usuario` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  `fecha_prestamo` date NOT NULL,
+  `fecha_entrega` date NOT NULL,
+  PRIMARY KEY (`id_prestamo`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=38 ;
+
+--
+-- Volcado de datos para la tabla `prestamo`
+--
+
+INSERT INTO `prestamo` (`id_prestamo`, `codigo_libro`, `titulo_libro`, `documento_usuario`, `nombre_usuario`, `fecha_prestamo`, `fecha_entrega`) VALUES
+(33, '3', 'CIEN_AÑOS_DE_SOLEDA', '789', 'AUSTIN', '2017-06-21', '2017-06-22'),
+(34, '3', 'CIEN_AÑOS_DE_SOLEDA', '789', 'AUSTIN', '2017-06-21', '2017-06-23'),
+(35, '3', 'CIEN_AÑOS_DE_SOLEDA', '789', 'AUSTIN', '2017-06-27', '2017-06-28'),
+(36, '3', 'CIEN_AÑOS_DE_SOLEDA', '789', 'AUSTIN', '2017-06-26', '2017-06-27'),
+(37, '1', 'CASCOS_DE_GUERRA', '789', 'AUSTIN', '2017-06-27', '2017-06-28');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `registro`
+--
+
+CREATE TABLE IF NOT EXISTS `registro` (
+  `genero` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `nombres` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `fecha_de_nacimiento` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `correo_electronico` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `pais` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `departamento` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `telefono` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `ocupacion` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `temas_de_interes` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `novedades` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `tipo_de_documento` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `numero_de_documento` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `contrasena` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `confirmar_contrasena` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `fk_id_rol` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`numero_de_documento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `registro`
+--
+
+INSERT INTO `registro` (`genero`, `nombres`, `fecha_de_nacimiento`, `correo_electronico`, `pais`, `departamento`, `telefono`, `ocupacion`, `temas_de_interes`, `novedades`, `tipo_de_documento`, `numero_de_documento`, `contrasena`, `confirmar_contrasena`, `fk_id_rol`) VALUES
+('femenino', 'lizeth Mayerly ', '1998-07-28', 'lmalvarez5350@misena.edu.co', 'COLOMBIA', 'BOGOTÁ, D.C.', '3214543038', 'Estudiante', 'musica y ciencia', 'no', 'CC', '1024591577', '147', '147', '2'),
+('masculino', 'DANIEL BASTIDAS', '1998-03-10', 'dybastidas32@misena.edu.co', 'COLOMBIA', 'BOGOTÁ, D.C.', '3118116023', 'Empresario', 'lectura y cultura', 'no', 'CC', '123', '123', '123', '1'),
+('masculino', 'AUSTIN SDFSD', '2015-09-10', 'mamita@hotmail.com', 'COLOMBIA', 'BOGOTÁ, D.C.', '3118669878', 'Estudiante', 'lectura y cultura', 'si', 'CC', '789', '789', '789', '2');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rol`
+--
+
+CREATE TABLE IF NOT EXISTS `rol` (
+  `id_rol` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `rol` varchar(100) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `rol` (`id_rol`, `rol`) VALUES
+('1', 'administrador'),
+('2', 'usuario'),
+('3', 'bibliotecario');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `solicitud`
+--
+
+CREATE TABLE IF NOT EXISTS `solicitud` (
+  `id_reserva` int(15) NOT NULL AUTO_INCREMENT,
+  `fk_documento_usuario` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
+  `fk_codigo_libro` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`id_reserva`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=25 ;
+
+--
+-- Volcado de datos para la tabla `solicitud`
+--
+
+INSERT INTO `solicitud` (`id_reserva`, `fk_documento_usuario`, `fk_codigo_libro`) VALUES
+(23, '789', '3'),
+(24, '789', '1');
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
